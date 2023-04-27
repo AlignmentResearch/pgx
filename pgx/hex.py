@@ -34,7 +34,7 @@ class State(v1.State):
     _rng_key: jax.random.KeyArray = jax.random.PRNGKey(0)
     _step_count: jnp.ndarray = jnp.int32(0)
     # --- Hex specific ---
-    _size: jnp.ndarray = jnp.int8(11)
+    _size: int = 11
     # 0(black), 1(white)
     _turn: jnp.ndarray = jnp.int8(0)
     # 11x11 board
@@ -45,7 +45,7 @@ class State(v1.State):
     #  .
     #  [110, 111, 112, ...,  119, 120]]
     _board: jnp.ndarray = -jnp.zeros(
-        11 * 11, jnp.int32
+        11 * 11, jnp.int8
     )  # <0(oppo), 0(empty), 0<(self)
 
     @property
@@ -86,7 +86,12 @@ class Hex(v1.Env):
 def _init(rng: jax.random.KeyArray, size: int) -> State:
     rng, subkey = jax.random.split(rng)
     current_player = jnp.int8(jax.random.bernoulli(subkey))
-    return State(_size=size, current_player=current_player)  # type:ignore
+    return State(
+        _size=size,
+        current_player=current_player,
+        legal_action_mask=jnp.ones(size * size, dtype=jnp.bool_),
+        _board=jnp.zeros(size * size, dtype=jnp.int8),
+    )  # type:ignore
 
 
 def _step(state: State, action: jnp.ndarray, size: int) -> State:
