@@ -45,7 +45,7 @@ class State(v1.State):
     #  .
     #  [110, 111, 112, ...,  119, 120]]
     _board: jnp.ndarray = -jnp.zeros(
-        11 * 11, jnp.int8
+        11 * 11, jnp.int32
     )  # <0(oppo), 0(empty), 0<(self)
 
     @property
@@ -90,7 +90,7 @@ def _init(rng: jax.random.KeyArray, size: int) -> State:
         _size=size,
         current_player=current_player,
         legal_action_mask=jnp.ones(size * size, dtype=jnp.bool_),
-        _board=jnp.zeros(size * size, dtype=jnp.int8),
+        _board=jnp.zeros(size * size, dtype=jnp.int32),
     )  # type:ignore
 
 
